@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Home</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="all,follow">
+    <!-- Bootstrap CSS-->
+    <link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.min.css">
+    <!-- Font Awesome CSS-->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+    <!-- Google fonts - Popppins for copy-->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,800">
+    <!-- orion icons-->
+    <link rel="stylesheet" href="css/orionicons.css">
+    <!-- theme stylesheet-->
+    <link rel="stylesheet" href="css/style.default.css" id="theme-stylesheet">
+    <!-- Custom stylesheet - for your changes-->
+    <link rel="stylesheet" href="css/custom.css">
+    <!-- Favicon-->
+    <link rel="shortcut icon" href="img/favicon.png?3">
+    <!-- Tweaks for older IEs--><!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]-->
+  </head>
+  <body>
+    <!-- navbar-->
+    <header class="header">
+      <nav class="navbar navbar-expand-lg px-4 py-2 bg-white shadow">
+        <a href="#" class="sidebar-toggler text-gray-500 mr-4 mr-lg-5 lead">
+          <i class="fas fa-align-left"></i>
+        </a>
+        <a href="index.html" class="navbar-brand font-weight-bold text-uppercase">离散数学算法演示系统</a>
+        <!--ul class="ml-auto d-flex align-items-center list-unstyled mb-0">
+          <li class="nav-item">
+            <form id="searchForm" class="ml-auto d-none d-lg-block">
+              <div class="form-group position-relative mb-0">
+                <button type="submit" style="top: -3px; left: 0;" class="position-absolute bg-white border-0 p-0"><i class="o-search-magnify-1 text-gray text-lg"></i></button>
+                <input type="search" placeholder="Search ..." class="form-control form-control-sm border-0 no-shadow pl-4">
+              </div>
+            </form>
+          </li>
+          <li class="nav-item dropdown mr-3"><a id="notifications" href="http://example.com" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle text-gray-400 px-1"><i class="fa fa-bell"></i><span class="notification-icon"></span></a>
+            <div aria-labelledby="notifications" class="dropdown-menu"><a href="#" class="dropdown-item">
+                <div class="d-flex align-items-center">
+                  <div class="icon icon-sm bg-violet text-white"><i class="fab fa-twitter"></i></div>
+                  <div class="text ml-2">
+                    <p class="mb-0">You have 2 followers</p>
+                  </div>
+                </div></a><a href="#" class="dropdown-item"> 
+                <div class="d-flex align-items-center">
+                  <div class="icon icon-sm bg-green text-white"><i class="fas fa-envelope"></i></div>
+                  <div class="text ml-2">
+                    <p class="mb-0">You have 6 new messages</p>
+                  </div>
+                </div></a><a href="#" class="dropdown-item">
+                <div class="d-flex align-items-center">
+                  <div class="icon icon-sm bg-blue text-white"><i class="fas fa-upload"></i></div>
+                  <div class="text ml-2">
+                    <p class="mb-0">Server rebooted</p>
+                  </div>
+                </div></a><a href="#" class="dropdown-item">
+                <div class="d-flex align-items-center">
+                  <div class="icon icon-sm bg-violet text-white"><i class="fab fa-twitter"></i></div>
+                  <div class="text ml-2">
+                    <p class="mb-0">You have 2 followers</p>
+                  </div>
+                </div></a>
+              <div class="dropdown-divider"></div><a href="#" class="dropdown-item text-center"><small class="font-weight-bold headings-font-family text-uppercase">View all notifications</small></a>
+            </div>
+          </li>
+          <li class="nav-item dropdown ml-auto"><a id="userInfo" href="http://example.com" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle"><img src="img/avatar-6.jpg" alt="Jason Doe" style="max-width: 2.5rem;" class="img-fluid rounded-circle shadow"></a>
+            <div aria-labelledby="userInfo" class="dropdown-menu"><a href="#" class="dropdown-item"><strong class="d-block text-uppercase headings-font-family">Mark Stephen</strong><small>Web Developer</small></a>
+              <div class="dropdown-divider"></div><a href="#" class="dropdown-item">Settings</a><a href="#" class="dropdown-item">Activity log       </a>
+              <div class="dropdown-divider"></div><a href="login.html" class="dropdown-item">Logout</a>
+            </div>
+          </li>
+        </ul-->
+      </nav>
+    </header>
+    <div class="d-flex align-items-stretch">
+      <div id="sidebar" class="sidebar py-3">
+        <div class="text-gray-500 text-uppercase px-3 px-lg-4 py-4 font-weight-bold headings-font-family">目录</div>
+        <ul class="sidebar-menu list-unstyled">  
+          <li class="sidebar-list-item">
+            <a href="index.html" class="sidebar-link text-muted active">
+              <i class="o-home-1 mr-3 text-gray"></i><span>介绍</span>
+            </a>
+          </li>
+          <li class="sidebar-list-item">
+            <a href="dijkstra.html" class="sidebar-link text-muted">
+              <i class="o-table-content-1 mr-3 text-gray"></i><span>图的最短距离</span>
+            </a>
+          </li>
+          <li class="sidebar-list-item">
+            <a href="huffman.html" class="sidebar-link text-muted">
+              <i class="o-survey-1 mr-3 text-gray"></i><span>哈夫曼编码</span>
+            </a>
+          </li>
+          <li class="sidebar-list-item">
+            <a href="#pages" data-toggle="collapse" data-target="#pages" aria-expanded="false" aria-controls="pages" class="sidebar-link text-muted">
+              <i class="o-wireframe-1 mr-3 text-gray"></i><span>最小生成树</span>
+            </a>
+            <div id="pages" class="collapse">
+              <ul class="sidebar-menu list-unstyled border-left border-primary border-thick">
+                <li class="sidebar-list-item"><a href="prim.html" class="sidebar-link text-muted pl-lg-5">Prim算法</a></li>
+                <li class="sidebar-list-item"><a href="kruskal.html" class="sidebar-link text-muted pl-lg-5">Kruskal算法</a></li>
+              </ul>
+            </div>
+          </li>
+          
+        </ul>
+      </div>
+
+      <div class="page-holder w-100 d-flex flex-wrap">
+        <div class="container-fluid px-xl-5">
+          <section class="py-5">
+            <div class="row mb-5">
+              <div class="col-lg-6 ">
+                <div class="card mb-2">
+                  <div class="card-body">
+                    <h3 class="card-title">迪杰斯特拉算法</h3>
+                    <p class="card-text">
+                      迪杰斯特拉算法（英语：Dijkstra's algorithm）由荷兰计算机科学家艾兹赫尔·迪杰斯特拉在1956年提出。
+                      这是从一个顶点到其余各顶点的最短路径算法，解决的是有权图中最短路径问题。          
+                    </p>
+                    <p>
+                      迪杰斯特拉算法主要特点是以起始点为中心向外层层扩展，直到扩展到终点为止。
+                      对于不含负权的有向图，这是当前已知的最快的单源最短路径算法。
+                    </p>
+                    <a href="https://baike.baidu.com/item/%E8%BF%AA%E5%85%8B%E6%96%AF%E7%89%B9%E6%8B%89%E7%AE%97%E6%B3%95/23665989?fromtitle=Dijkstra%E7%AE%97%E6%B3%95&fromid=215612&fr=aladdin" class="card-link">百度百科</a>
+                    <a href="https://wikipedia.hk.wjbk.site/baike-%E6%88%B4%E5%85%8B%E6%96%AF%E7%89%B9%E6%8B%89%E7%AE%97%E6%B3%95" class="card-link">维基百科</a>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-lg-6 ">
+                <div class="card mb-2">
+                  <div class="card-body">
+                    <h3 class="card-title">哈夫曼编码</h3>
+                    <p class="card-text">
+                      Huffman在1952年根据香农（Shannon）在1948年和范若（Fano）在1949年阐述的这种编码思想提出了一种不定长编码的方法。
+                      霍夫曼编码的基本方法是先对图像数据扫描一遍，计算出各种像素出现的概率，按概率的大小指定不同长度的唯一码字，
+                      由此得到一张该图像的霍夫曼码表。编码后的图像数据记录的是每个像素的码字，而码字与实际像素值的对应关系记录在码表中。
+                    </p>
+                    <a href="https://baike.baidu.com/item/%E5%93%88%E5%A4%AB%E6%9B%BC%E7%BC%96%E7%A0%81/1719730?fr=aladdin" class="card-link">百度百科</a>
+                    <a href="https://wikipedia.hk.wjbk.site/baike-%E9%9C%8D%E5%A4%AB%E6%9B%BC%E7%BC%96%E7%A0%81" class="card-link">维基百科</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-lg-6 ">
+                <div class="card mb-2">
+                  <div class="card-body">
+                    <h3 class="card-title">最小生成树</h3>
+                    <p class="card-text">
+                        一个有 n 个结点的连通图的<b>生成树</b>是原图的极小连通子图，且包含原图中的所有 n 个结点，并且有保持图连通的最少的边。
+                        最小生成树其实是<b>最小权重生成树</b>的简称。
+                    </p>
+                    <p>
+                        最小生成树可以用kruskal（克鲁斯卡尔）算法或prim（普里姆）算法求出。
+                    </p>
+                    <p>一个图的最小生成树有以下的特点</p>
+                    <ul>
+                      <li>无回路，且包含原图中的n-1条边</li>
+                      <li>包含原图中的全部顶点</li>
+                      <li>边的权重和在所有其他生成树中最小</li>
+                      <li>最小生成树存在，则该图一定连通。反过来一样，图连通，则最小生成树一定存在。</li>
+                    </ul>
+                    <a href="https://baike.baidu.com/item/%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91" class="card-link">百度百科</a>
+                    <a href="https://wikipedia.hk.wjbk.site/wiki/%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91" class="card-link">维基百科</a>
+                  
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-6">
+                <div class="card mb-2">
+                  <div class="card-body">
+                    <h3 class="card-title">Prim算法</h3>
+                    <p class="card-text">
+                        该算法于1930年由捷克数学家沃伊捷赫·亚尔尼克（Vojtěch Jarník）发现；
+                        并在1957年由美国计算机科学家罗伯特·普里姆（Robert C. Prim）独立发现；
+                        1959年，艾兹格·迪科斯彻再次发现了该算法。
+                        因此，在某些场合，Prim算法又被称为DJP算法、Jarnik算法或Prim-Jarnik算法。
+                    </p>
+          
+                    <a href="https://baike.baidu.com/item/Prim?fromtitle=Prim%E7%AE%97%E6%B3%95&fromid=10986864" class="card-link">百度百科</a>
+                    <a href="https://wikipedia.hk.wjbk.site/wiki/Prim%E7%AE%97%E6%B3%95" class="card-link">维基百科</a>
+                  </div>
+                </div> 
+                <div class="card">
+                  <div class="card-body">
+                    <h3 class="card-title">Kruskal算法</h3>
+                    <p class="card-text">
+                        Kruskal算法由Joseph Kruskal在1956年发表。
+                        Kruskal算法在图中存在相同权值的边时也有效。
+                    </p>
+                    <a href="https://baike.baidu.com/item/%E5%85%8B%E9%B2%81%E6%96%AF%E5%8D%A1%E5%B0%94%E7%AE%97%E6%B3%95?fromtitle=kruskal%E7%AE%97%E6%B3%95&fromid=4483275" class="card-link">百度百科</a>
+                    <a href="https://wikipedia.hk.wjbk.site/wiki/%E5%85%8B%E9%B2%81%E6%96%AF%E5%85%8B%E5%B0%94%E6%BC%94%E7%AE%97%E6%B3%95" class="card-link">维基百科</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+        <!-- <footer class="footer bg-white shadow align-self-end py-3 px-xl-5 w-100">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-md-6 text-center text-md-left text-primary">
+                <p class="mb-2 mb-md-0"></p>
+              </div>
+              <div class="col-md-6 text-center text-md-right text-gray-400">
+                <p class="mb-0">Copyright &copy; 2019.Company name All rights reserved.More Templates <a href="http://www.cssmoban.com/" target="_blank" title="模板之家">模板之家</a> - Collect from <a href="http://www.cssmoban.com/" title="网页模板" target="_blank">网页模板</a></p>
+              </div>
+            </div>
+          </div>
+        </footer> -->
+      </div>
+    </div>
+    <!-- JavaScript files-->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/popper.js/umd/popper.min.js"> </script>
+    <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+    <script src="vendor/jquery.cookie/jquery.cookie.js"> </script>
+    <script src="vendor/chart.js/Chart.min.js"></script>
+    <script src="vendor/snap.svg/snap.svg-min.js"></script>
+    <script src="js/js.cookie.min.js"></script>
+  
+    <script src="js/front.js"></script>
+  </body>
+</html>

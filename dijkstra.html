@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="all,follow">
+    <!-- Bootstrap CSS-->
+    <link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.min.css">
+    <!-- Font Awesome CSS-->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+    <!-- Google fonts - Popppins for copy-->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,800">
+    <!-- orion icons-->
+    <link rel="stylesheet" href="css/orionicons.css">
+    <!-- theme stylesheet-->
+    <link rel="stylesheet" href="css/style.default.css" id="theme-stylesheet">
+    <!-- Custom stylesheet - for your changes-->
+    <link rel="stylesheet" href="css/custom.css">
+    <!-- Favicon-->
+    <link rel="shortcut icon" href="img/favicon.png?3">
+    <!-- Tweaks for older IEs--><!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]-->
+  </head>
+  <body>
+    <!-- navbar-->
+    <header class="header">
+			<nav class="navbar navbar-expand-lg px-4 py-2 bg-white shadow">
+					<a href="#" class="sidebar-toggler text-gray-500 mr-4 mr-lg-5 lead">
+					<i class="fas fa-align-left"></i>
+					</a>
+					<a href="index.html" class="navbar-brand font-weight-bold text-uppercase">离散数学算法演示系统</a>
+			</nav>
+		</header>
+		
+
+    <div class="d-flex align-items-stretch">
+      <div id="sidebar" class="sidebar py-3">
+				<div class="text-gray-500 text-uppercase px-3 px-lg-4 py-4 font-weight-bold headings-font-family">目录</div>
+				<ul class="sidebar-menu list-unstyled">  
+					<li class="sidebar-list-item">
+						<a href="index.html" class="sidebar-link text-muted">
+							<i class="o-home-1 mr-3 text-gray"></i><span>介绍</span>
+						</a>
+					</li>
+					<li class="sidebar-list-item">
+						<a href="dijkstra.html" class="sidebar-link text-muted active">
+							<i class="o-table-content-1 mr-3 text-gray"></i><span>图的最短距离</span>
+						</a>
+					</li>
+					<li class="sidebar-list-item">
+						<a href="huffman.html" class="sidebar-link text-muted">
+							<i class="o-survey-1 mr-3 text-gray"></i><span>哈夫曼编码</span>
+						</a>
+					</li>
+					<li class="sidebar-list-item">
+						<a href="#" data-toggle="collapse" data-target="#pages" aria-expanded="false" aria-controls="pages" class="sidebar-link text-muted">
+							<i class="o-wireframe-1 mr-3 text-gray"></i><span>最小生成树</span>
+						</a>
+						<div id="pages" class="collapse">
+							<ul class="sidebar-menu list-unstyled border-left border-primary border-thick">
+								<li class="sidebar-list-item"><a href="prim.html" class="sidebar-link text-muted pl-lg-5">Prim算法</a></li>
+								<li class="sidebar-list-item"><a href="kruskal.html" class="sidebar-link text-muted pl-lg-5">Kruskal算法</a></li>
+							</ul>
+						</div>
+					</li>					
+				</ul>
+      </div>
+      <div class="page-holder w-100 d-flex flex-wrap">
+        <div class="container-fluid px-xl-5">
+          <section class="py-5">
+            <div class="row">
+              <div class="col-lg-9 mb-4">
+                <div class="card">
+                  <div class="card-header p-3">
+                    <button id="add_btn" type="submit" class="mb-2 btn btn-info"> 添加结点 </button>
+                    <button id="delete_circle_btn" type="submit" class="mb-2 btn btn-info"> 删除尾结点 </button>
+                    <button id="delete_line_btn" type="submit" class="mb-2 btn btn-info"> 删除虚线 </button>
+                    <button id="set_head_btn" type="submit" class="mb-2 btn btn-info" data-toggle="tooltip" title="默认起点为结点0"> 设为起点 </button>
+                    <button id="clear_btn" type="submit" class="mb-2 btn btn-info"> 清空重置 </button>
+                    <button id="modify_btn" type="submit" class="mb-2 btn btn-info"> 修改现图 </button>
+                  </div>
+                  <div class="card-body">
+                    <svg id="svg" style="border: 1px solid;" width="100%" height="100%" viewBox="0 0 640 360" preserveAspectRatio="xMaxYMax meet"  xmlns="http://www.w3.org/2000/svg" >
+                      <line id="spliter" stroke-width="0" />
+                    </svg>
+                  </div>
+                  <div class="card-header p-3">
+                    <button id="begin_dij_btn" type="submit" class="m-0 btn btn-info" data-toggle="tooltip" title="确认后将不能修改图咯" data-placement="top"> 确认|重新 开始 </button>
+                    <button id="last_dij_btn" type="submit" class="m-0 btn btn-info disabled" data-toggle="tooltip" title="返回上一步" data-placement="top"> 上一步 </button>
+                    <button id="next_dij_btn" type="submit" class="m-0 btn btn-info disabled" data-toggle="tooltip" title="执行算法的下一步" data-placement="top"> 下一步 </button>
+                    <button type="submit" class="mb-2 btn btn-info right_float dropdown dropdown-toggle" data-toggle="dropdown"> 示例 </button>     
+                    <div id="example_menu" class="dropdown-menu">
+                      <div class="dropdown-item" data-source="graph-1.svg">图例1</div>
+                      <div class="dropdown-item">图例2</div>
+                      <div class="dropdown-item">图例3</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+                <div class="col-lg-3 mb-4">
+                  <div class="card">
+                    <div class="card-header p-4">
+                      <h3 class="m-0">距离表</h6>
+                    </div>
+                    <div class="card-body p-2">
+                      <table class="table card-text">
+                        <thead>
+                          <tr>
+                            <th>Node</th>
+                            <th>Distance</th>
+                          </tr>
+                        </thead>
+                        <tbody id="distance-table"></tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+            </div>
+            <div class="row">
+              <div class="col-lg-7">
+                <div class="card">
+                  <div class="card-header">
+                    <h3>算法伪代码</h3>
+                  </div>
+                  <div class="card-body">
+                      <p>G={V,E}</p>
+                      <p>1. 初始时令 S={V0},T=V-S={其余顶点}，T中顶点对应的距离值</p>
+                      <p>&emsp;&emsp;若存在<V0,Vi>，d(V0,Vi)为<V0,Vi>弧上的权值</p>
+                      <p>&emsp;&emsp;若不存在<V0,Vi>，d(V0,Vi)为∞</p>
+                      <p>2. 从T中选取一个与S中顶点有关联边且权值最小的顶点W，加入到S中</p>
+                      <p>3. 对其余T中顶点的距离值进行修改：</p>
+                      <p>&emsp;&emsp;若加进W作中间顶点，从V0到Vi的距离值缩短，则修改此距离值</p>
+                      <p>重复上述步骤2、3，直到S中包含峙所有顶点，即W=Vi为止</p>
+                    </div>
+                </div>
+                
+              </div>
+            </div>
+            </section>
+
+        </div>
+        <!-- <footer class="footer bg-white shadow align-self-end py-3 px-xl-5 w-100">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-md-6 text-center text-md-left text-primary">
+                <p class="mb-2 mb-md-0">Your company &copy; 2018-2020</p>
+              </div>
+              <div class="col-md-6 text-center text-md-right text-gray-400">
+                <p class="mb-0">Copyright &copy; 2019.Company name All rights reserved.More Templates <a href="http://www.cssmoban.com/" target="_blank" title="模板之家">模板之家</a> - Collect from <a href="http://www.cssmoban.com/" title="网页模板" target="_blank">网页模板</a></p>
+              </div>
+            </div>
+          </div>
+        </footer> -->
+      </div>
+    </div>
+    <!-- JavaScript files-->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/popper.js/umd/popper.min.js"> </script>
+    <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+    <script src="vendor/jquery.cookie/jquery.cookie.js"> </script>
+    <script src="vendor/chart.js/Chart.min.js"></script>
+    <script src="js/js.cookie.min.js"></script>
+    <script src="vendor/snap.svg/snap.svg-min.js"></script>
+  
+    <script src="js/front.js"></script>
+  </body>
+</html>

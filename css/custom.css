@@ -1,0 +1,52 @@
+/* your styles go here */
+.circle-node {
+    stroke: black;
+    fill: white;
+    stroke-width: 3;
+    r: 1rem;
+    cursor: pointer;
+}
+
+.circle-node.select {
+    fill: orange;
+}
+
+.circle-node.visited {
+    fill: red;
+}
+
+.circle-font{
+    font-size: 1rem;
+    stroke-width: 3;
+    text-anchor: middle;
+    cursor: pointer;
+}
+
+.line-font{
+    font-size: 1rem;
+    stroke-width: 3;
+    text-anchor: middle;
+    cursor: pointer;
+}
+.line-font.select{
+    fill: red;
+}
+
+
+.line {
+    stroke-width: 3;
+    stroke: black;
+}
+
+.line.select {
+    stroke-dasharray: 12;
+}
+
+.line.connect {
+    stroke-width: 5;
+    stroke: red;
+}
+
+.right_float{
+    float: right;
+}
