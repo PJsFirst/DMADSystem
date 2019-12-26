@@ -50,3 +50,46 @@
 .right_float{
     float: right;
 }
+
+.computer{
+    width: 100%;
+    height: 50%;
+    border: 0.5rem black solid;
+    background-color: #fff;
+    min-height: 8rem;
+    word-wrap: break-word;
+    overflow-y: scroll;
+    font-size: 1.5rem;
+}
+
+.computer-neck{
+    height: 10%;
+    width: 10%;
+    margin: 0 auto;
+    background: black;
+}
+
+.border-black{
+    border: 1px solid black;
+}
+
+.computer-foot{
+    height: 5%;
+    width: 30%;
+    margin: 0 auto;
+    background: black;
+}
+
+.keyboard{
+    width: 100%;
+}
+
+.keys{
+    background: black;
+    color: white;
+    display: inline-block;
+    font-size: 1rem;
+
+}
+
+  

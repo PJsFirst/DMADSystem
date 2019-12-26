@@ -268,7 +268,7 @@ $(function () {
      * 若已点了别的点，则新增连线
      */
     function circle_click(e) {
-        
+        console.log(this.data('dragFlag'))
         if (this.data('dragFlag')) {
             e.stopPropagation();
             this.data('dragFlag', false);
@@ -853,11 +853,33 @@ $(function () {
         $('#next_dij_btn').unbind('click').addClass('disabled');
     }
 
+    /**
+     * 点击后，加载资源
+     */
     function load_example(e) {
         let file_name = e.target.dataset.source;
-        $('#svg').load(`./img/${file_name}`);
-    }
+        Snap('#svg').load(`./static/${file_name}`);
+        
+        distances = new Array(MAX_NUM).fill(0);
+        visitedNodes = new Array(MAX_NUM).fill(false);
+        nodeSet = new Array(MAX_NUM).fill(0);
+        lineSet = [];
+        step = 0;
+        head = null;
+        lines = new Array(MAX_NUM).fill(undefined).map(()=>new Array(MAX_NUM).fill(null));
+        nodes = new Array();
+        selectedNode = null;
+        selectedLine = null;
+        textNum = 0;
+        startLines = [];
+        endLines = [];
+        console.log(svg)
 
+        let arr = svg.selectAll('g')
+       
+    }
+   
+    
 });
 
 
