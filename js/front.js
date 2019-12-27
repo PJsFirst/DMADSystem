@@ -80,8 +80,8 @@ $(function () {
         circle.addClass('circle-node');
         text.addClass('circle-font');
         var g = svg.g(circle, text);
-        g.data('dragFlag', false);
-        g.data('nodeNum', textNum);
+        g.data('drag_flag', false);
+        g.attr('data-num', textNum);
         if (textNum === 0) {
             head = g;
         }
@@ -89,8 +89,7 @@ $(function () {
         add_node_to_table(textNum); 
         textNum++;
         nodes.push(g);
-        g.drag(dragMove,dragStart, dragEnd);
-        g.click(circle_click);
+        g.drag(dragMove,dragStart, dragEnd).click(circle_click);
     }
 
     /**
@@ -136,8 +135,8 @@ $(function () {
         if (selectedLine === null) {
             return;
         } else {
-            let start = selectedLine.data('start');
-            let end = selectedLine.data('end');
+            let start = +selectedLine.attr('data-start');
+            let end = +selectedLine.attr('data-end');
             selectedLine.remove();
             lines[start][end] = null;
             lines[end][start] = null;
@@ -235,11 +234,11 @@ $(function () {
         if (selectedLine === null || num < 0 || num > 9) {
             return;
         } else {
-            if (selectedLine.data('firstClick')) {
+            if (selectedLine.data('first_click')) {
                 // 重置数字
-                selectedLine.data('firstClick', false);
+                selectedLine.data('first_click', false);
                 selectedLine[1].node.innerHTML = num.toString();
-                selectedLine.data('distance', num);
+                selectedLine.attr('data-distance', num);
             } else {
                 // 接着输入
                 if(selectedLine[1].node.innerHTML === '0') {
@@ -247,15 +246,15 @@ $(function () {
                 } else {
                     selectedLine[1].node.innerHTML += num;
                 }
-                selectedLine.data('distance', parseInt(selectedLine[1].node.innerHTML));
+                selectedLine.attr('data-distance', parseInt(selectedLine[1].node.innerHTML));
             }
             // 更新表
-            let head_num = head.data('nodeNum');
-            let start = selectedLine.data('start');
-            let end = selectedLine.data('end');
+            let head_num = +head.attr('data-num');
+            let start = +selectedLine.attr('data-start');
+            let end = +selectedLine.attr('data-end');
             if (start === head_num || end === head_num) {
                 let table_tr = $('#distance-table').find('td');
-                table_tr[start === head_num ? end : start].innerHTML = selectedLine.data('distance');
+                table_tr[start === head_num ? end : start].innerHTML = selectedLine.attr('data-distance');
             }  
         }
         
@@ -268,10 +267,10 @@ $(function () {
      * 若已点了别的点，则新增连线
      */
     function circle_click(e) {
-        console.log(this.data('dragFlag'))
-        if (this.data('dragFlag')) {
+        //console.log(this.data('drag_flag'))
+        if (this.data('drag_flag')) {
             e.stopPropagation();
-            this.data('dragFlag', false);
+            this.data('drag_flag', false);
             return;
         }
         if (this === selectedNode) {
@@ -282,8 +281,8 @@ $(function () {
         } else {
             if (selectedNode !== null) {
                 
-                let x = selectedNode.data('nodeNum');
-                let y = this.data('nodeNum');
+                let x = +selectedNode.attr('data-num');
+                let y = +this.attr('data-num');
                 if (lines[x][y]) {
                     // 已存在连线
                     return;
@@ -309,13 +308,13 @@ $(function () {
                     d.addClass('line-font')
                     var g = svg.g(l, d);
                     g.insertBefore(spliter);
-                    let start = selectedNode.data('nodeNum');
-                    let end = this.data('nodeNum');
-                    g.data("start", start).data("end", end).data("distance", 1).data("firstClick");
+                    let start = +selectedNode.attr('data-num');
+                    let end = +this.attr('data-num');
+                    g.attr("data-start", start).attr("data-end", end).attr("data-distance", 1).data("first_click", false);
                     lines[start][end] = lines[end][start] = g;
                     g.click(line_click);
                     // 更新距离
-                    let head_num = head.data('nodeNum');
+                    let head_num = +head.attr('data-num');
                     if (start === head_num || end === head_num) {
                         let table_tr = $('#distance-table').find('td');
                         if (table_tr.length) {
@@ -341,10 +340,9 @@ $(function () {
      * @param {事件} evt 
      */
     function dragStart(x, y, evt) {
-        console.log('start')
         startX = parseInt(this[0].attr('cx'));
         startY = parseInt(this[0].attr('cy'));
-        let n = this.data('nodeNum');
+        let n = +this.attr('data-num');
         startLines = []; // 保存x1、y1为移动点的线
         endLines = []; // 保存x2、y2为移动点的线
         for (let i = 0; i < textNum; i++){
@@ -360,6 +358,7 @@ $(function () {
                 }
             }
         }
+        
     }
     /**
      * 位移时说明不是点击
@@ -423,7 +422,7 @@ $(function () {
         
         this[0].attr({cx: newX, cy: newY});
         this[1].attr({x: newX, y: (newY+5)});      
-        this.data('dragFlag', true)
+        this.data('drag_flag', true)
     }
 
     function dragEnd(e) {
@@ -449,12 +448,13 @@ $(function () {
             }
             selectedLine = this;
             // 第一次点，输入数据时重置
-            selectedLine.data('firstClick', true);
+            selectedLine.data('first_click', true);
         }
     }
 
     /**
      * 添加一项时，向表里增加
+     * @param {第几项} num 
      */
     function add_node_to_table(num) {
         var table = $("#distance-table");
@@ -477,11 +477,10 @@ $(function () {
      * - 删除访问样式
      */
     function reset_table() {
-        if (textNum === 0) {
-            return;
-        }
-        let head_num = head.data('nodeNum');
+        if (textNum === 0) return;
+        let head_num = +head.attr('data-num');
         var table_tr = $('#distance-table').find('td');
+        if (table_tr.length === 0) return;
         for (let i = 0; i < textNum; i++) {
             // 距离表初始化为0，因此不用管
             if (head_num === i) {
@@ -494,7 +493,7 @@ $(function () {
                 distances[i] = Number.MAX_SAFE_INTEGER;
                 table_tr[i].innerHTML = 'Infinite';
             } else {
-                distances[i] = lines[head_num][i].data('distance');
+                distances[i] = +lines[head_num][i].attr('data-distance');
                 table_tr[i].innerHTML = distances[i];
             }   
         }
@@ -524,7 +523,7 @@ $(function () {
         if (head === null) {
             return;
         } else {
-            var head_num = head.data('nodeNum');
+            var head_num = +head.attr('data-num');
             head[0].addClass('visited');
             visitedNodes[head_num] = true;
         }
@@ -569,14 +568,13 @@ $(function () {
             visitedNodes[next_node] = true;
             // 更新
             for (let j = 0; j < textNum; j++) {
-                if (!visitedNodes[j] && lines[next_node][j] && distances[j] > distances[next_node] + lines[next_node][j].data('distance')) {
-                    distances[j] = distances[next_node] + lines[next_node][j].data('distance');
+                if (!visitedNodes[j] && lines[next_node][j] && distances[j] > distances[next_node] + (+lines[next_node][j].attr('data-distance'))) {
+                    distances[j] = distances[next_node] + (+lines[next_node][j].attr('data-distance'));
                     table_tr[j].innerHTML = distances[j];
                 }
             }
             
             step++;
-            console.log(step)
         }
     }
 
@@ -587,7 +585,7 @@ $(function () {
     function last_dij_step() {
         let n = --step;
         begin_dij_btn_click();  
-        console.log(n);
+        
         for (let i = 0; i < n; i++) {
             next_dij_step();
         }
@@ -603,8 +601,8 @@ $(function () {
         // 判断是否是完全连通
         let connectFlag = new Array(textNum).fill(false);
         lineSet.forEach((item) => {
-            connectFlag[item.data('start')] = true;
-            connectFlag[item.data('end')] = true;
+            connectFlag[+item.attr('data-start')] = true;
+            connectFlag[+item.attr('data-end')] = true;
         })
         if(!connectFlag.every(item => item)) {         
             return false;
@@ -662,22 +660,22 @@ $(function () {
         let nextIndex = -1;
         let nextLine = null;
         lineSet.forEach((item,index) => {
-            let start = item.data('start');
-            let end = item.data('end');
+            let start = +item.attr('data-start');
+            let end = +item.attr('data-end');
             if (visitedNodes[start] ^ visitedNodes[end]) {
                 if (nextLine === null) {
                     nextLine = item;
                     nextIndex = index;
                 } else {
-                    if (item.data('distance') < nextLine.data('distance')) {
+                    if (+item.attr('data-distance') < +nextLine.attr('data-distance')) {
                         nextLine = item;
                         nextIndex = index;
                     }
                 }
             }
         })
-        let start = nextLine.data('start');
-        let end = nextLine.data('end');
+        let start = +nextLine.attr('data-start');
+        let end = +nextLine.attr('data-end');
         nextLine[0].addClass('connect');
         nodes[start][0].addClass('visited');
         nodes[end][0].addClass('visited');
@@ -704,7 +702,7 @@ $(function () {
         lineSet.forEach(item => {
             item[0].removeClass('connect');
         })
-        visitedNodes[head.data('nodeNum')] = true;
+        visitedNodes[+head.attr('data-num')] = true;
         head[0].addClass('visited')
         for (let i = 0; i < s; i++) {
             next_pri_step();
@@ -733,7 +731,7 @@ $(function () {
 
         // 对线进行排序
         lineSet.sort((a, b) => {
-            return a.data('distance') - b.data('distance');
+            return +a.attr('data-distance') - (+b.attr('data-distance'));
         })
         
         // 删除所有选中的
@@ -766,12 +764,12 @@ $(function () {
         }
         while(lineSet.length) {
             let l = lineSet.shift();
-            let x = nodeSet[l.data('start')];
-            let y = nodeSet[l.data('end')];
+            let x = nodeSet[+l.attr('data-start')];
+            let y = nodeSet[+l.attr('data-end')];
             // 处于不同的连通分量
             if (x != y) {
-                nodes[l.data('start')][0].addClass('visited');
-                nodes[l.data('end')][0].addClass('visited');
+                nodes[+l.attr('data-start')][0].addClass('visited');
+                nodes[+l.attr('data-end')][0].addClass('visited');
                 l[0].addClass('connect');
                 step++;
                 // 将统一连通
@@ -793,7 +791,7 @@ $(function () {
             item[0].removeClass('connect');
         })
         lineSet.sort((a, b) => {
-            return a.data('distance') - b.data('distance');
+            return +a.attr('data-distance') - (+b.attr('data-distance'));
         })
         for (let i = 0; i < textNum; i++) {
             nodeSet[i] = i;
@@ -854,28 +852,70 @@ $(function () {
     }
 
     /**
-     * 点击后，加载资源
+     * 点击后示例后，加载相应资源
+     * 
      */
     function load_example(e) {
         let file_name = e.target.dataset.source;
-        Snap('#svg').load(`./static/${file_name}`);
-        
-        distances = new Array(MAX_NUM).fill(0);
-        visitedNodes = new Array(MAX_NUM).fill(false);
-        nodeSet = new Array(MAX_NUM).fill(0);
-        lineSet = [];
-        step = 0;
-        head = null;
-        lines = new Array(MAX_NUM).fill(undefined).map(()=>new Array(MAX_NUM).fill(null));
-        nodes = new Array();
-        selectedNode = null;
-        selectedLine = null;
-        textNum = 0;
-        startLines = [];
-        endLines = [];
-        console.log(svg)
+        Snap.load(`./static/${file_name}`, function(graph) {
+            // 删除子元素
+            this.children().forEach(item => {
+                item.remove()
+            })
+            // 初始化数据
+            distances = new Array(MAX_NUM).fill(0);
+            visitedNodes = new Array(MAX_NUM).fill(false);
+            nodeSet = new Array(MAX_NUM).fill(0);
+            lineSet = [];
+            step = 0;
+            lines = new Array(MAX_NUM).fill(undefined).map(()=>new Array(MAX_NUM).fill(null));
+            nodes = new Array();
+            selectedNode = null;
+            selectedLine = null;
+            textNum = 0;
+            head = null;
+            // graph.node是documentfragment类型
+            // 构造新图   
+            graph.node.childNodes.forEach(item => {
+                item = Snap(item)
+                if (item.attr('data-distance')) {
+                    let distance = +item.attr('data-distance');
+                    let start = +item.attr('data-start');
+                    let end = +item.attr('data-end');
+                    console.log(start, end);
+                    let g = svg.paper.g(item.children()[0], item.children()[1]);
+                    g.attr('data-distance', distance).attr('data-end', end).attr('data-start', start).data('first_click', false).click(line_click);
+                    lines[start][end] = g;
+                    lines[end][start] = g;
+                    
+                } else if (item.attr('data-num')) {
+                    add_node_to_table(textNum); 
+                    textNum++;
+                    let n = +item.attr('data-num');    
+                    let g = svg.paper.g(item.children()[0], item.children()[1]);
+                    g.attr('data-num', n).click(circle_click).drag(dragMove, dragStart, dragEnd);
+                   
+                    nodes.push(g);
+                } else {       
+                    // 先复制一份
+                    // 不然导致documentfragment更新
+                    // 遍历出错
+                    let c = item.clone()
+                    if (c.type === 'line') {
+                        spliter = c;
+                    }
+                    
+                    svg.append(c);
+                }
+            })
+            head = nodes[0]
+            reset_table()
+            
 
-        let arr = svg.selectAll('g')
+        }, svg);
+        // 恢复一些按钮的状态
+        
+
        
     }
    
