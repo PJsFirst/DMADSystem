@@ -7,6 +7,7 @@
     cursor: pointer;
 }
 
+
 .circle-node.select {
     fill: orange;
 }
@@ -47,8 +48,18 @@
     stroke: red;
 }
 
+.line.visited {
+    stroke-width: 5;
+    stroke: lightgray;
+}
+
 .right_float{
     float: right;
+}
+
+.tips{
+    margin: 0 auto;
+    text-align: center;
 }
 
 .computer{
@@ -92,4 +103,40 @@
 
 }
 
-  
+.huffman-node {
+    stroke: black;
+    fill: white;
+    stroke-width: 3;
+    r: 1.25rem;
+    cursor: pointer;
+}
+
+.huffman-node.select {
+    fill: orange;
+}
+
+.huffman-node.visited {
+    fill: lightgray;
+    stroke: darkgray;
+}
+
+.huffman-font{
+    font-size: 1.125rem;
+    stroke-width: 5;
+    text-anchor: middle;
+    cursor: pointer;
+}
+
+
+
+.huffman-letter{
+    font-size: 1.5rem;
+    stroke-width: 5;
+    text-anchor: middle;
+    cursor: pointer;
+}
+
+.hidden {
+    visibility: hidden;
+}
+

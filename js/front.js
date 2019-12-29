@@ -829,18 +829,21 @@ $(function () {
 
     /**
      * 重新添加按钮
+     * 
+     * 在导入图例、修改图时使用
      */
     function add_listener() {
         $('#add_btn').unbind('click').click(add_btn_click).removeClass('disabled');
         $('#delete_circle_btn').unbind('click').click(delete_circle_btn_click).removeClass('disabled');
-        $('#delete_line_btn').unbind('click').click(delete_line_btn_click).removeClass('disabled');
-        
+        $('#delete_line_btn').unbind('click').click(delete_line_btn_click).removeClass('disabled');      
         $('#set_head_btn').unbind('click').click(set_head_listener).removeClass('disabled');
         
     }
 
     /**
      * 取消上一步和下一步按钮
+     * 
+     * 在导入图例、修改图时使用
      */
     function remove_last_and_next_listener() {
         $('#last_pri_btn').unbind('click').addClass('disabled');     
@@ -874,6 +877,7 @@ $(function () {
             selectedLine = null;
             textNum = 0;
             head = null;
+            $("#distance-table").html('');
             // graph.node是documentfragment类型
             // 构造新图   
             graph.node.childNodes.forEach(item => {
@@ -882,7 +886,7 @@ $(function () {
                     let distance = +item.attr('data-distance');
                     let start = +item.attr('data-start');
                     let end = +item.attr('data-end');
-                    console.log(start, end);
+                    //console.log(start, end);
                     let g = svg.paper.g(item.children()[0], item.children()[1]);
                     g.attr('data-distance', distance).attr('data-end', end).attr('data-start', start).data('first_click', false).click(line_click);
                     lines[start][end] = g;
@@ -908,13 +912,14 @@ $(function () {
                     svg.append(c);
                 }
             })
-            head = nodes[0]
-            reset_table()
-            
-
+            head = nodes[0];
+            reset_table();
+            // 恢复一些按钮的状态
+            add_listener();
+            remove_last_and_next_listener();
         }, svg);
-        // 恢复一些按钮的状态
         
+
 
        
     }
