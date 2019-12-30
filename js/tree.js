@@ -353,6 +353,12 @@ $(function() {
 
     /**
      * 上一步
+     * 
+     * 如果是最后一步，则要隐藏0和1
+     * 
+     * step-1的结点要隐藏
+     * step-2的结点要高亮
+     * [0..step-2)的结点已访问]
      */
     function last_huff_step() {
         if(step === 0) {
@@ -364,9 +370,13 @@ $(function() {
             })
         }
         nodeOrder[step-1].hide();
-        if (step > 1) {
+        if (step > 1) {    
+            for (let i = 0; i < step-2; i++) {
+                nodeOrder[i].darken();
+            }
             nodeOrder[step-2].hight_light();
         }
+        
         step--;
     }
     /**
