@@ -305,7 +305,7 @@ $(function () {
                     var d = svg.text(x3, y3, '1').attr({
                         transform: `rotate(${newAngle} ${x3},${y3})`
                     })
-                    d.addClass('line-font')
+                    d.addClass('line-font');
                     var g = svg.g(l, d);
                     g.insertBefore(spliter);
                     let start = +selectedNode.attr('data-num');

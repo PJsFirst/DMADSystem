@@ -47,23 +47,45 @@ class treeNode{
      * @param {分界线} spliter 
      */
     create_line(svg, spliter) {
-        let x = this.g[0].attr('cx');
-        let y = this.g[0].attr('cy');
+        let x = +this.g[0].attr('cx');
+        let y = +this.g[0].attr('cy');
         let x1 = +this.left.g[0].attr('cx');
         let y1 = +this.left.g[0].attr('cy');
         let x2 = +this.right.g[0].attr('cx');
         let y2 = +this.right.g[0].attr('cy');
         this.left_line = svg.paper.line(x,y,x1,y1).addClass('line').insertBefore(spliter);
         this.right_line = svg.paper.line(x,y,x2,y2).addClass('line').insertBefore(spliter);
+       
+        let angle = Math.floor(Snap.angle(x,y,x1,y1));
+        let rad = Snap.rad(angle);
+        let sign = (90 < angle && angle < 270) ? -1 : 1;
+        let x3 = (x1+x)/2+8*Math.sin(rad)*sign;
+        let y3 = (y1+y)/2-8*Math.cos(rad)*sign;
+        let newAngle = (sign === -1) ? angle-180 : angle;
+        this.left_text = svg.text(x3, y3, '0').attr({
+            transform: `rotate(${newAngle} ${x3},${y3})`
+        }).addClass('line-font hidden');
         
+        angle = Math.floor(Snap.angle(x,y,x2,y2));
+        rad = Snap.rad(angle);
+        sign = (90 < angle && angle < 270) ? -1 : 1;
+        x3 = (x2+x)/2+8*Math.sin(rad)*sign;
+        y3 = (y2+y)/2-8*Math.cos(rad)*sign;
+        newAngle = (sign === -1) ? angle-180 : angle;
+        this.right_text = svg.text(x3, y3, '1').attr({
+            transform: `rotate(${newAngle} ${x3},${y3})`
+        }).addClass('line-font hidden');
+     
     }
     /**
      * 非叶结点进行隐藏
      */
     hide() {
         this.g[0].removeClass('select').removeClass('visited').addClass('hidden');
-        this.g[1].removeClass('select').removeClass('visited').addClass('hidden');
+        this.g[1].addClass('hidden');
         this.left_line.removeClass('connect').removeClass('visited').addClass('hidden');
+        this.left_text.addClass('hidden');
+        this.right_text.addClass('hidden');
         this.right_line.removeClass('connect').removeClass('visited').addClass('hidden');
         this.left.g[0].removeClass('select').removeClass('visited');
         this.right.g[0].removeClass('select').removeClass('visited');
@@ -119,6 +141,35 @@ class treeNode{
         this.right_line.removeClass('connect').addClass('visited');
         this.left.g[0].addClass('visited');
         this.right.g[0].addClass('visited');
+        return this;
+    }
+
+    /**
+     * 完成过后，呈现整棵树
+     * 没有其他标记
+     */
+    normalize() {
+        this.g[0].removeClass('select').removeClass('visited').removeClass('hidden');
+        this.g[1].removeClass('hidden');
+      
+        if(this.left_line) {
+            this.left_text.removeClass('hidden');
+            this.left_line.removeClass('connect').removeClass('visited').removeClass('hidden');
+        }
+        if(this.right_line) {
+            this.right_text.removeClass('hidden');
+            this.right_line.removeClass('connect').removeClass('visited').removeClass('hidden');
+        }
+        return this;
+    }
+
+    /**
+     * 非叶结点，去除分支上的0和1
+     * 去除0和1
+     */
+    hide_code() {
+        this.left_text.addClass('hidden');
+        this.right_text.addClass('hidden');
         return this;
     }
 
@@ -199,6 +250,7 @@ $(function() {
     /**
      * 按下开始键
      * 
+     * 状态
      * 0: 算法未开始，图上没有任何东西，按下后将创建
      * 1: 算法已开始，图上有结点，按下将重新开始
      * 2: 因为修改了文字的原因，图中结点无效，按下将清除原先的状态和结点，再重新开始
@@ -218,6 +270,8 @@ $(function() {
                 item.g.remove();
                 item.left_line.remove();
                 item.right_line.remove();
+                item.left_text.remove();
+                item.right_text.remove();
             })
             nodes.forEach(item => {
                 item.g.remove();
@@ -282,6 +336,12 @@ $(function() {
      */
     function next_huff_step() {
         if (step === nodeOrder.length) {
+            nodes.forEach(item => {
+                item.normalize();
+            })
+            nodeOrder.forEach(item => {
+                item.normalize();
+            })
             return;
         }
         if (step !== 0) {
@@ -297,6 +357,11 @@ $(function() {
     function last_huff_step() {
         if(step === 0) {
             return;
+        }
+        if (step === nodeOrder.length) {
+            nodeOrder.forEach(item => {
+                item.hide_code();
+            })
         }
         nodeOrder[step-1].hide();
         if (step > 1) {
