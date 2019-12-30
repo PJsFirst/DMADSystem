@@ -455,7 +455,7 @@ $(function() {
             $('#last_huff_btn').addClass('disabled').unbind('click');
             state = 2;
         }
-        let examples = ['ABBCCCCDDDDDDBBBBBFFFGGGG','AABBCCDD', 'ABBCCCCDDDDDD',
+        let examples = ['ABBCCCCDDDDDDBBBBBFFFGGGG','AABBCCDD',
         'ABBCCCCDDDDDDDDEEEEEEEEEEEEEEEEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF'];
         screen.html(examples[index]);
 
