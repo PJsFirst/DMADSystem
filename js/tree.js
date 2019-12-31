@@ -184,15 +184,18 @@ $(function() {
         $('.sidebar').toggleClass('shrink show');
     });
     $('[data-toggle="tooltip"]').tooltip();
-    $('#keyboard').delegate('button', 'click', keys_pressed);
-    $('#delete_btn').click(delete_btn_pressed);
-    $('#clear_btn').click(clear_btn_pressed);
+
+    $('#range-input').delegate('input', 'input', change_range);
+    $('#num-input').delegate('input', 'focus', focus_num_input);
+    $('#num-input').delegate('input', 'change', change_num);
     $('#begin_huff_btn').click(begin_btn_pressed);
     $('#example_menu').delegate('div','click',load_example);
     
     var screen = $('#computer'); // 虚拟电脑屏幕
     var svg = Snap("#svg");
     var spliter = Snap('#spliter');
+    var ranges = $('#range-input').children(); // 进度条
+    var inputs = $('#num-input').children(); // 进度条对应的数字
  
     var head = null; // 顶点
     var nodeSet = []; // 目前结点
@@ -202,49 +205,42 @@ $(function() {
     var nodeQueue = []; // 用于广度遍历，得到y坐标
     var step = 0; // 当前步数
     var state = 0; // 0表示尚未开始 1表示已开始 2表示要重新开始
+ 
     /**
-     * 虚拟按键按下，A-G
-     * 
-     * A的ASCII码是65
+     * 点击进度条
      */
-    function keys_pressed() {
-        if (state === 1) {
-            $('#next_huff_btn').addClass('disabled').unbind('click');
-            $('#last_huff_btn').addClass('disabled').unbind('click');
-            state = 2;
-        }
+    function change_range(e) {
         let index = $(this).index();
-        let c = String.fromCharCode((65 + index))
-        let html = screen.html().trim();
-        screen.html(html+c);
+        let value = +e.target.value;
+        if (value === 100) {
+            value -= 1;
+        }
+        inputs[index].value = value;
+        // 修改了权重，图无效
+        state = 2;
+        $('#last_huff_btn').addClass('disabled').unbind('click');
+        $('#next_huff_btn').addClass('disabled').unbind('click');
     }
 
     /**
-     * 虚拟删除键按下
+     * onfocus
+     * 不允许通过键盘输入
      */
-    function delete_btn_pressed() {
-        if (state === 1) {
-            $('#next_huff_btn').addClass('disabled').unbind('click');
-            $('#last_huff_btn').addClass('disabled').unbind('click');
-            state = 2;
-        }
-        let html = screen.html().trim();
-        if (html) {
-            html = html.slice(0, html.length-1);
-        }
-        screen.html(html);
+    function focus_num_input() {
+        this.blur();
     }
 
     /**
-     * 虚拟清空键按下
+     * 点击数目加减
      */
-    function clear_btn_pressed() {
-        if (state === 1) {
-            $('#next_huff_btn').addClass('disabled').unbind('click');
-            $('#last_huff_btn').addClass('disabled').unbind('click');
-            state = 2;
-        }
-        screen.html('');
+    function change_num(e) {
+        let index = $(this).index();
+        let value = e.target.value;
+        ranges[index].value = value;
+        // 修改了权重，图无效
+        state = 2;
+        $('#last_huff_btn').addClass('disabled').unbind('click');
+        $('#next_huff_btn').addClass('disabled').unbind('click');
     }
 
     /**
@@ -288,9 +284,14 @@ $(function() {
      */
     function cal_huffman_tree() {
         step = 0;
-        let text = screen.html();
-        if (text === '') {
-            alert('文本不能为空');
+        // 统计个数
+        let arr = new Array(MAX_NUM).fill(0);
+        for(let i = 0; i < inputs.length; i++) {
+            arr[i] = +inputs[i].value;
+        }
+ 
+        if (arr.every(item => item === 0)) {
+            alert('请先调整字母权重哦');
             return false;
         }
         // 重置状态
@@ -300,11 +301,7 @@ $(function() {
         nodes = [];
         nodeOrder = [];
         nodeQueue = [];
-        // 统计个数
-        let arr = new Array(MAX_NUM).fill(0);
-        for(let i = 0; i < text.length; i++) {
-            arr[text[i].charCodeAt(0)-65]++;
-        }
+        // 新创结点
         arr.forEach((item,index) => {
             if (item) {
                 let node = new treeNode(item, null, null, 0);
@@ -465,9 +462,18 @@ $(function() {
             $('#last_huff_btn').addClass('disabled').unbind('click');
             state = 2;
         }
-        let examples = ['ABBCCCCDDDDDDBBBBBFFFGGGG','AABBCCDD',
-        'ABBCCCCDDDDDDDDEEEEEEEEEEEEEEEEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF'];
-        screen.html(examples[index]);
+        let examples = [
+            [8,14,10,4,18,0,0],
+            [5,20,30,15,26,12,20],
+            [1,2,3,4,5,0,0],
+            [1,2,4,8,16,32,64]
+        ];
+        examples[index].forEach((item, i) => {
+            inputs[i].value = item;
+            ranges[i].value = item;
+        })
+        //导入后开始
+        begin_btn_pressed();
 
     }
 })
