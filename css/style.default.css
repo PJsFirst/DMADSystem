@@ -1330,17 +1330,18 @@ button {
   display: block;
   position: absolute;
   top: 50%;
-  right: 1rem;
+  right: 0.5rem;
   color: #aaa;
-  font-family: 'Font Awesome 5 Free';
-  content: '\f104';
-  font-weight: 900;
+  font-family: 'iconfont';
+  content: '\e670';
+  font-size: 0.75rem;
+  font-weight: 1000;
   -webkit-transform: translateY(-50%);
   transform: translateY(-50%);
 }
 
 .sidebar-link[data-toggle="collapse"][aria-expanded='true']::before {
-  content: '\f107';
+  content: '\e69a';
 }
 
 .sidebar-link:hover {

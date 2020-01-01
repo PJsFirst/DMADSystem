@@ -70,6 +70,7 @@
 .o-wireframe-1::before {
     display: inline-block;
   font-family: "orion-font";
+  text-transform: none;
   font-style: normal;
   font-weight: normal;
   font-variant: normal;
