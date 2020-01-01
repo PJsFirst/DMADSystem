@@ -928,4 +928,4 @@ $(function () {
 });
 
 
-Cookies.set('active', 'true');
+// Cookies.set('active', 'true');

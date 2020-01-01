@@ -442,7 +442,7 @@ $(function() {
     function create_nodes() {
         let offsetX = MAX_NUM - nodes.length;
         let offsetY = Math.ceil((MAX_NUM-1-head.depth)/2);
-        console.log(offsetX, offsetY);
+        //console.log(offsetX, offsetY);
         [...nodeOrder,...nodes].forEach(item => {
             item.create_node(svg, spliter, offsetX, offsetY);
         })
