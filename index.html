@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="all,follow">
     <!-- Bootstrap CSS-->
-    <link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css">
     <!-- Alibaba icons-->
     <link rel="stylesheet" href="iconfont/iconfont.css">
     <!-- theme stylesheet-->
@@ -16,7 +16,7 @@
     <!-- Custom stylesheet - for your changes-->
     <link rel="stylesheet" href="css/custom.css">
     <!-- Favicon-->
-    <link rel="shortcut icon" href="img/favicon.png?3">
+    <link rel="shortcut icon" href="static/favicon.png?3">
     <!-- Tweaks for older IEs--><!--[if lt IE 9]>
         <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
         <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]-->
@@ -217,9 +217,12 @@
       </div>
     </div>
     <!-- JavaScript files-->
-    <script src="vendor/jquery/jquery.min.js"></script>
-    <script src="vendor/popper.js/umd/popper.min.js"> </script>
-    <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+    <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+    <script src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js"></script>
+    <!-- bootstrap.bundle.min.js 用于弹窗、提示、下拉菜单，包含了 popper.min.js -->
+    <script src="https://cdn.staticfile.org/popper.js/1.16.0/umd/popper.min.js"></script>
+    <!-- 最新的 Bootstrap4 核心 JavaScript 文件 -->
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js"></script>="vendor/bootstrap/js/bootstrap.min.js"></script>
     <!-- <script src="vendor/jquery.cookie/jquery.cookie.js"> </script> -->
     <!-- <script src="js/js.cookie.min.js"></script> -->
     <script src="vendor/snap.svg/snap.svg-min.js"></script>
