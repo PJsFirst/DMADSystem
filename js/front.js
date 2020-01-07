@@ -49,6 +49,7 @@ $(function () {
 
     set_btn_listener();
     $('#example_menu').delegate('div', 'click', load_example);
+    $('#help_btn').click(load_help_img);
 
     /**
      * 图论的三个算法
@@ -226,7 +227,47 @@ $(function () {
     }
 
     /**
+     * 监听backspace
+     * keypress不能监听
+     */
+    $(document).keydown(function(e) {
+        //console.log(event.keyCode);
+        if (event.keyCode === 8) {
+            if (selectedLine) {
+                if (selectedLine.data('first_click')) {
+                    // 第一次按
+                    selectedLine.data('first_click', false);
+                    selectedLine[1].node.innerHTML = '0';
+                    selectedLine.attr('data-distance', 0);
+                } else {
+                    let s = selectedLine[1].node.innerHTML;
+                    let str = s.substr(0, s.length-1);
+                    if (str) {
+                        selectedLine[1].node.innerHTML = str;
+                        selectedLine.attr('data-distance', +str);
+                    } else {
+                        // 为空
+                        selectedLine[1].node.innerHTML = '0';
+                        selectedLine.attr('data-distance', 0);
+                    }
+                }
+                // 更新表
+                let head_num = +head.attr('data-num');
+                let start = +selectedLine.attr('data-start');
+                let end = +selectedLine.attr('data-end');
+                if (start === head_num || end === head_num) {
+                    let table_tr = $('#distance-table').find('td');
+                    if(table_tr.length) {
+                        table_tr[start === head_num ? end : start].innerHTML = selectedLine.attr('data-distance');
+                    }  
+                }  
+            }
+        }
+    })
+
+    /**
      * 监测键盘输入
+     * 这里是对数字0-9的监听
      */
     $(document).keypress(function(e) {
         //console.log(event.keyCode);
@@ -254,7 +295,9 @@ $(function () {
             let end = +selectedLine.attr('data-end');
             if (start === head_num || end === head_num) {
                 let table_tr = $('#distance-table').find('td');
-                table_tr[start === head_num ? end : start].innerHTML = selectedLine.attr('data-distance');
+                if(table_tr.length) {
+                    table_tr[start === head_num ? end : start].innerHTML = selectedLine.attr('data-distance');
+                }  
             }  
         }
         
@@ -917,13 +960,24 @@ $(function () {
             // 恢复一些按钮的状态
             add_listener();
             remove_last_and_next_listener();
-        }, svg);
-        
-
-
-       
+        }, svg);     
     }
-   
+
+     /**
+     * 实现图片懒加载
+     * 当点击“帮助”时才加载图片
+     */
+    function load_help_img() { 
+        let imgs = $('.help')
+        for (let i = 0; i < imgs.length; i++) {
+            if ($(imgs[i]).attr('src')) {
+                continue;
+            } else {
+                $(imgs[i]).attr('src',imgs[i].dataset.src)
+            }
+        }
+        
+    }
     
 });
 
