@@ -38,6 +38,8 @@ $(function () {
     var selectedNode = null;
     // 记录所选线
     var selectedLine = null;
+    // 记录算法进行时所访问的线
+    var visitingLine = null;
     // 分割线
     var spliter = Snap("#spliter");
     // 结点个数
@@ -46,7 +48,10 @@ $(function () {
     // 移动时所记录
     var startLines = [];
     var endLines = [];
-
+    // 伪代码框
+    var pcodes = $('.pcode').children();
+    var pstep = 0;
+   
     set_btn_listener();
     $('#example_menu').delegate('div', 'click', load_example);
     $('#help_btn').click(load_help_img);
@@ -185,7 +190,7 @@ $(function () {
      *  - 更新距离表
      */
     function set_head_listener() {
-        // 
+
         if (selectedNode === null) {
             return;
         } else {
@@ -207,7 +212,7 @@ $(function () {
   
         nodes.forEach(item => {
             item.click(circle_click);
-            item[0].removeClass('visited');
+            item[0].removeClass('visited').removeClass('visiting');
         })
         get_line_set();
         lineSet.forEach(item => {
@@ -551,7 +556,7 @@ $(function () {
             for (let j = 0; j < textNum; j++) {
                 if (lines[i][j]) {
                     lSet.add(lines[i][j]);
-                    lines[i][j][0].removeClass('connect');
+                    lines[i][j][0].removeClass('connect').removeClass('visiting').removeClass('visited');
                 }      
             }
         }
@@ -614,6 +619,8 @@ $(function () {
                 if (!visitedNodes[j] && lines[next_node][j] && distances[j] > distances[next_node] + (+lines[next_node][j].attr('data-distance'))) {
                     distances[j] = distances[next_node] + (+lines[next_node][j].attr('data-distance'));
                     table_tr[j].innerHTML = distances[j];
+                    //console.log(table_tr[j].parentNode)
+
                 }
             }
             
@@ -634,7 +641,9 @@ $(function () {
         }
 
     }
-
+    /**
+     * 检查是否连通
+     */
     function check_if_graph_connect() {
         if (textNum <= 1) {
             return false;
@@ -651,6 +660,23 @@ $(function () {
             return false;
         }
         return true;
+    }
+
+    /**
+     * 伪代码高亮
+     * @param {第几步高亮}} step 
+     */
+    function pcode_highligt_at(step) {
+        if (step >= pcodes.length) return;
+        if (pstep === -1) {
+            pstep = step;
+            $(pcodes[pstep]).addClass('select');
+        } else {
+            $(pcodes[pstep]).removeClass('select');
+            pstep = step;
+            $(pcodes[pstep]).addClass('select');
+        }
+        
     }
 
     /**
@@ -680,53 +706,104 @@ $(function () {
             selectedLine[1].removeClass('select');
             selectedLine = null;
         }
-        visitedNodes.fill(false);
-        nodes.forEach(item=>{
-            item[0].removeClass('visited');
-        })
+        
         // 随机选一个点
         let randNum = Math.floor(Math.random()*textNum);
         head = nodes[randNum];
+        visitedNodes.fill(false);
         visitedNodes[randNum] = true;
-        nodes[randNum][0].addClass('visited');
-
+        nodes.forEach(item => {
+            item[0].removeClass('visited').removeClass('visiting');
+            if (item === head) {
+                item[0].addClass('visiting');
+            }
+        })
+        lineSet.forEach(item => {
+            item[0].removeClass('not-select').removeClass('connect').removeClass('visited').removeClass('visiting');
+        })
+        pcode_highligt_at(1);
     }
+
 
     /**
      * prim
      * 执行算法的下一步
      */
     function next_pri_step() {
-        if (step === textNum - 1) {
+        
+        lineSet.forEach(item => {
+            if (item[0].hasClass('visiting')) {
+                item[0].removeClass('visiting').addClass('connect');
+            }
+            if (item[0].hasClass('not-select')) {
+                item[0].removeClass('not-select');
+            }
+        })
+        // 记录是否是合并的步骤
+        let flag = false;
+        nodes.forEach(item => {
+            if (item[0].hasClass('visiting')) {
+                flag = true;
+                item[0].removeClass('visiting').addClass('visited');
+            }
+        })
+        if (step === textNum - 1 && !flag) {
+            // 最后一步
+            lineSet.forEach(item => {
+                if (!item[0].hasClass('connect')) {
+                    item[0].addClass('visited');
+                }
+            })
+            pcode_highligt_at(5);
             return;
         }
-        let nextIndex = -1;
+        if (flag) {
+            step === 0 && pcode_highligt_at(2);
+            step !== 0 && pcode_highligt_at(4);
+            return;
+        } else {
+            pcode_highligt_at(3);
+        }
+        
+        
         let nextLine = null;
+        // 保存符合条件的线，但不是最短的
+        let nextlines = [];
         lineSet.forEach((item,index) => {
             let start = +item.attr('data-start');
             let end = +item.attr('data-end');
             if (visitedNodes[start] ^ visitedNodes[end]) {
+                // 这些是可选的
+                nextlines.push(item);
+                // 选出最短的
                 if (nextLine === null) {
-                    nextLine = item;
-                    nextIndex = index;
+                    nextLine = item;         
                 } else {
                     if (+item.attr('data-distance') < +nextLine.attr('data-distance')) {
                         nextLine = item;
-                        nextIndex = index;
                     }
                 }
             }
         })
         let start = +nextLine.attr('data-start');
         let end = +nextLine.attr('data-end');
-        nextLine[0].addClass('connect');
-        nodes[start][0].addClass('visited');
-        nodes[end][0].addClass('visited');
-        visitedNodes[start] = true;
-        visitedNodes[end] = true;
-        lineSet.splice(nextIndex, 1);
-        step++;
+        nextLine[0].addClass('visiting');
+        if (visitedNodes[start]) {
+            // 说明end是新增的一端
+            visitedNodes[end] = true;
+            nodes[end][0].addClass('visiting');
+        } else {
+            visitedNodes[start] = true;
+            nodes[start][0].addClass('visiting');
+        }
 
+        nextlines.forEach(item => {
+            if (item !== nextLine) {
+                item[0].addClass('not-select');
+            }
+        })
+
+        step++;
     }
 
     /**
@@ -739,17 +816,23 @@ $(function () {
         step = 0;
         visitedNodes.fill(false);
         nodes.forEach(item => {
-            item[0].removeClass('visited');
+            item[0].removeClass('visited').removeClass('visiting');
         })
         get_line_set();
+        let head_num = +head.attr('data-num');
         lineSet.forEach(item => {
-            item[0].removeClass('connect');
+            item[0].removeClass('not-select').removeClass('connect').removeClass('visited').removeClass('visiting');
+            if (item.attr('data-start') === head_num || item.attr('data-end') === head_num) {
+                item[0].addClass('not-select');
+            }
         })
-        visitedNodes[+head.attr('data-num')] = true;
-        head[0].addClass('visited')
-        for (let i = 0; i < s; i++) {
+        visitedNodes[head_num] = true;
+        head[0].addClass('visiting');
+        while(step < s) {
             next_pri_step();
         }
+        next_pri_step();
+        pcode_highligt_at(2);
     }
 
     /**
@@ -759,6 +842,7 @@ $(function () {
     function begin_kru_btn_click() {
 
         step = 0;
+    
         // 记录线，用于排序
         if(!check_if_graph_connect()) {
             alert('存在未连通的结点');
@@ -790,35 +874,49 @@ $(function () {
         // 将每个点形成自身分量 
         for (let i = 0; i < textNum; i++) {
             nodeSet[i] = i;
-            nodes[i][0].removeClass('visited');
+            nodes[i][0].removeClass('visited').removeClass('visiting');
         }
-
-        next_kru_step();
+        visitingLine = null;
+        pcode_highligt_at(0);
+        //next_kru_step();
     }
 
     /**
      * kruskal
      * 执行算法的下一步
+     * 
      */
     function next_kru_step() {
-        // 结束
-        if(step === textNum - 1) {
-            return;
-        }
-        while(lineSet.length) {
-            let l = lineSet.shift();
-            let x = nodeSet[+l.attr('data-start')];
-            let y = nodeSet[+l.attr('data-end')];
+        if (pstep === 1) {
+            let x = nodeSet[+visitingLine.attr('data-start')];
+            let y = nodeSet[+visitingLine.attr('data-end')]; 
+            nodes[+visitingLine.attr('data-start')][0].removeClass('visiting').addClass('visited');
+            nodes[+visitingLine.attr('data-end')][0].removeClass('visiting').addClass('visited');
             // 处于不同的连通分量
             if (x != y) {
-                nodes[+l.attr('data-start')][0].addClass('visited');
-                nodes[+l.attr('data-end')][0].addClass('visited');
-                l[0].addClass('connect');
-                step++;
+                visitingLine[0].removeClass('visiting').addClass('connect');
+                pcode_highligt_at(2);
                 // 将统一连通
-                nodeSet = nodeSet.map((item)=> item===x ? y : item);
-                break;
+                nodeSet = nodeSet.map((item)=> item===x ? y : item);  
+            } else {
+                visitingLine[0].removeClass('visiting').addClass('visited');
+                pcode_highligt_at(3);
             }
+            
+            return;
+        }
+        if(step < lineSet.length) {
+            visitingLine = lineSet[step];
+            visitingLine[0].addClass('visiting');
+            nodes[+visitingLine.attr('data-start')][0].removeClass('visited').addClass('visiting');
+            nodes[+visitingLine.attr('data-end')][0].removeClass('visited').addClass('visiting');
+            pcode_highligt_at(1);
+            step++;  
+        } else if (step === lineSet.length) {
+            // 结束
+            // 这里是为了返加上一步时能够到最后一条线
+            step++;
+            pcode_highligt_at(4);
         }
     }
 
@@ -829,20 +927,19 @@ $(function () {
     function last_kru_step() {
         let s = step - 1;
         step = 0;
-        get_line_set();
+        visitingLine = null;
+        pcode_highligt_at(0);
         lineSet.forEach(item => {
-            item[0].removeClass('connect');
-        })
-        lineSet.sort((a, b) => {
-            return +a.attr('data-distance') - (+b.attr('data-distance'));
+            item[0].removeClass('connect').removeClass('visiting').removeClass('visited');
         })
         for (let i = 0; i < textNum; i++) {
             nodeSet[i] = i;
-            nodes[i][0].removeClass('visited');
+            nodes[i][0].removeClass('visited').removeClass('visiting');
         }
-        for (let i = 0; i < s; i++) {
+        while(step < s) {
             next_kru_step();
         }
+        
     }
 
     /**

@@ -95,7 +95,7 @@
                       <div class="dropdown-item" data-source="graph-5.svg">图例5</div>
                       <div class="dropdown-item" data-source="graph-6.svg">图例6</div>
                     </div>
-                    <button type="button" class="mb-2 mx-2 btn btn-secondary right_float" data-toggle="modal" data-target="#myModal">帮助</button>
+                    <button id='help_btn' type="button" class="mb-2 mx-2 btn btn-secondary right_float" data-toggle="modal" data-target="#myModal">帮助</button>
                     <div class="modal fade" id="myModal">
                       <div class="modal-dialog">
                         <div class="modal-content">
@@ -106,13 +106,13 @@
                           </div>
                           <div class="modal-body p-4">
                             <h5>1. 如何添加线</h4>
-                              <img class="mb-2" src="static/add_line.gif">
-                            <p>先选中一个结点，再点击另一个结点即可添加。若连线已存在，则不能添加。连线的距离为1。注意：在算法开始后，是无法添加连线的哦，若想作修改，请点击<button class="mx-2 btn btn-info">删除现图</button></p>
+                              <img class="help mb-2" data-src="static/add_line.gif">
+                            <p>先选中一个结点，再点击另一个结点即可添加。若连线已存在，则不能添加。连线的距离为1。<strong>注意</strong>：在算法开始后，是无法添加连线的哦，若想作修改，请点击<button class="mx-2 btn btn-info">删除现图</button></p>
                             <h5>2. 如何修改距离</h5>
-                            <img class="mb-2" src="static/change_line.gif">
-                            <p>选中连线，从键盘中输入距离值，完成后再次点击即可取消选定。注意：在算法开始后，是无法修改距离的哦，若想作修改，请点击<button class="m-2 btn btn-info">删除现图</button></p>
+                            <img class="help mb-2" data-src="static/change_line.gif">
+                            <p>选中连线，从键盘中输入距离值，完成后再次点击即可取消选定。<strong>注意</strong>：在算法开始后，是无法修改距离的哦，若想作修改，请点击<button class="m-2 btn btn-info">删除现图</button></p>
                             <h5>3. 如何删除结点</h5>
-                            <p>点击 <button class="mx-2 btn btn-info">删除尾结点</button>即可删除最大序号的结点，与结点所连的线也会同时删除</p>
+                            <p>点击 <button class="mx-2 btn btn-info">删除尾结点</button>即可删除<strong>最大序号</strong>的结点，与结点所连的线也会同时删除</p>
                             <h5>4. 如何删除距离</h5>
                             <p>先选中要删除的结点，再点击 <button class="mx-2 btn btn-info">删除虚线</button>即可删除。</p>
                           </div>         
@@ -131,17 +131,29 @@
                   <div class="card-header pb-3">
                     <h3>Kruskal算法伪代码</h3>
                   </div>
-                  <div class="card-body">
-                    <p>F&nbsp;:= 空集合</p>
-                    <p><b>for each</b> 图 G 中的顶点 v</p>
-                    <p>&emsp;&emsp;<b>do</b> 将 v 加入森林 F</p>
-                    <p>所有的边(u, v) ∈ E依权重 w 递增排序</p>
-                    <p><b>for each</b> 边(u, v) ∈ E</p>
-                    <p>&emsp;&emsp;<b>do if</b> u 和 v 不在同一棵子树</p>
-                    <P>&emsp;&emsp;<b>then</b> </P>
-                    <p>&emsp;&emsp;&emsp;&emsp;F&nbsp;:= F ∪ {(u, v)}</p>
-                    <p>&emsp;&emsp;&emsp;&emsp;将 u 和 v 所在的子树合并</p>
-                    <p>输出F为最小生成树</p>
+                  <div class="card-body pcode">
+                    <div>
+                      <p>F&nbsp;:= 空集合</p>
+                      <p><b>for each</b> 图 G 中的顶点 v</p>
+                      <p>&emsp;&emsp;<b>do</b> 将 v 加入森林 F</p>
+                      <p>所有的边(u, v)依权重w<strong>递增</strong>排序</p>
+                    </div>
+                    <div>
+                      <p><b>for each</b> 边(u, v) ∈ E</p>
+                    </div>
+                    <div>
+                      <p>&emsp;&emsp;<b>if</b> u 和 v 不在同一棵子树</p>
+                      <p>&emsp;&emsp;&emsp;&emsp;F&nbsp;:= F ∪ {(u, v)}</p>
+                      <p>&emsp;&emsp;&emsp;&emsp;将 u 和 v 所在的子树合并</p>
+                    </div>
+                    <div>
+                      <p>&emsp;&emsp;<b>else</b></p>
+                      <p>&emsp;&emsp;&emsp;&emsp;忽略此边</p>
+                    </div>
+                    <div>
+                      <p>输出F为最小生成树</p>
+                    </div>
+                    
                   </div>
                 </div>
               </div>

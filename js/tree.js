@@ -136,7 +136,7 @@ class treeNode{
      * 表示已经访问过
      */
     darken() {
-        this.g[0].addClass('visited');
+        this.g[0].removeClass('select').removeClass('visited');
         this.left_line.removeClass('connect').addClass('visited');
         this.right_line.removeClass('connect').addClass('visited');
         this.left.g[0].addClass('visited');
@@ -205,7 +205,7 @@ $(function() {
     var nodeQueue = []; // 用于广度遍历，得到y坐标
     var step = 0; // 当前步数
     var state = 0; // 0表示尚未开始 1表示已开始 2表示要重新开始
- 
+    var darkFlag = false; // false表示要暗化
     /**
      * 点击进度条
      */
@@ -258,6 +258,7 @@ $(function() {
             }
         } else if (state === 1) {
             step = 0;
+            darkFlag = false;
             nodeOrder.forEach(item => {
                 item.hide();
             })
@@ -301,6 +302,7 @@ $(function() {
         nodes = [];
         nodeOrder = [];
         nodeQueue = [];
+        darkFlag = false;
         // 新创结点
         arr.forEach((item,index) => {
             if (item) {
@@ -327,25 +329,30 @@ $(function() {
         $('#last_huff_btn').unbind('click').click(last_huff_step).removeClass('disabled');
         return true;
     }
-    
+
     /**
      * 下一步
      */
     function next_huff_step() {
         if (step === nodeOrder.length) {
-            nodes.forEach(item => {
-                item.normalize();
-            })
-            nodeOrder.forEach(item => {
+            [...nodes,...nodeOrder].forEach(item => {
                 item.normalize();
             })
             return;
         }
-        if (step !== 0) {
+        if (darkFlag) {
             nodeOrder[step-1].darken();
+            darkFlag = false;
+        } else {
+            nodeOrder[step].show().hight_light();
+            step++;
+            darkFlag = true;
         }
-        nodeOrder[step].show().hight_light();
-        step++;
+        // if (step !== 0) {
+        //     nodeOrder[step-1].darken();
+        // }
+        // nodeOrder[step].show().hight_light();
+        // step++;
     }
 
     /**
@@ -354,10 +361,10 @@ $(function() {
      * 如果是最后一步，则要隐藏0和1
      * 
      * step-1的结点要隐藏
-     * step-2的结点要高亮
-     * [0..step-2)的结点已访问]
+     * [0..step-2]的结点已访问
      */
     function last_huff_step() {
+        
         if(step === 0) {
             return;
         }
@@ -368,12 +375,11 @@ $(function() {
         }
         nodeOrder[step-1].hide();
         if (step > 1) {    
-            for (let i = 0; i < step-2; i++) {
+            for (let i = 0; i < step-1; i++) {
                 nodeOrder[i].darken();
             }
-            nodeOrder[step-2].hight_light();
-        }
-        
+        } 
+        darkFlag = false;
         step--;
     }
     /**
@@ -476,4 +482,6 @@ $(function() {
         begin_btn_pressed();
 
     }
+
+   
 })

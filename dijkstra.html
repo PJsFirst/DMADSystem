@@ -110,12 +110,12 @@
                           <div class="modal-body p-4">
                             <h5>1. 如何添加线</h4>
                               <img class="help mb-2" data-src="static/add_line.gif">
-                            <p>先选中一个结点，再点击另一个结点即可添加。若连线已存在，则不能添加。连线的距离为1。注意：在算法开始后，是无法添加连线的哦，若想作修改，请点击<button class="mx-2 btn btn-info">删除现图</button></p>
+                            <p>先选中一个结点，再点击另一个结点即可添加。若连线已存在，则不能添加。连线的距离为1。<strong>注意</strong>：在算法开始后，是无法添加连线的哦，若想作修改，请点击<button class="mx-2 btn btn-info">删除现图</button></p>
                             <h5>2. 如何修改距离</h5>
                             <img class="help mb-2" data-src="static/change_line.gif">
-                            <p>选中连线，从键盘中输入距离值，完成后再次点击即可取消选定。注意：在算法开始后，是无法修改距离的哦，若想作修改，请点击<button class="m-2 btn btn-info">删除现图</button></p>
+                            <p>选中连线，从键盘中输入距离值，完成后再次点击即可取消选定。<strong>注意</strong>：在算法开始后，是无法修改距离的哦，若想作修改，请点击<button class="m-2 btn btn-info">删除现图</button></p>
                             <h5>3. 如何删除结点</h5>
-                            <p>点击 <button class="mx-2 btn btn-info">删除尾结点</button>即可删除最大序号的结点，与结点所连的线也会同时删除</p>
+                            <p>点击 <button class="mx-2 btn btn-info">删除尾结点</button>即可删除<strong>最大序号</strong>的结点，与结点所连的线也会同时删除</p>
                             <h5>4. 如何删除距离</h5>
                             <p>先选中要删除的结点，再点击 <button class="mx-2 btn btn-info">删除虚线</button>即可删除。</p>
                           </div>         
@@ -134,7 +134,7 @@
                       <h3 class="m-0">距离表</h6>
                     </div>
                     <div class="card-body p-2">
-                      <table class="table card-text">
+                      <table class="table  card-text">
                         <thead>
                           <tr>
                             <th>Node</th>
@@ -154,14 +154,20 @@
                     <h3>算法伪代码</h3>
                   </div>
                   <div class="card-body">
-                      <p>G={V,E}</p>
-                      <p>1. 初始时令 S={V0},T=V-S={其余顶点}，T中顶点对应的距离值</p>
-                      <p>&emsp;&emsp;若存在<V0,Vi>，d(V0,Vi)为<V0,Vi>弧上的权值</p>
-                      <p>&emsp;&emsp;若不存在<V0,Vi>，d(V0,Vi)为∞</p>
-                      <p>2. 从T中选取一个与S中顶点有关联边且权值最小的顶点W，加入到S中</p>
-                      <p>3. 对其余T中顶点的距离值进行修改：</p>
-                      <p>&emsp;&emsp;若加进W作中间顶点，从V0到Vi的距离值缩短，则修改此距离值</p>
-                      <p>重复上述步骤2、3，直到S中包含峙所有顶点，即W=Vi为止</p>
+                      <div><p>G={V,E}</p></div>
+                      <div>
+                        <p>1. 初始时令 S={V0},T=V-S={其余顶点}，T中顶点对应的距离值</p>
+                        <p>&emsp;&emsp;若存在<V0,Vi>，d(V0,Vi)为<V0,Vi>弧上的权值</p>
+                        <p>&emsp;&emsp;若不存在<V0,Vi>，d(V0,Vi)为∞</p>
+                      </div>
+                      <div>
+                        <p>2. 从T中选取一个与S中顶点有关联边且权值最小的顶点W，加入到S中</p>
+                      </div>
+                      <div>
+                        <p>3. 对其余T中顶点的距离值进行修改：</p>
+                        <p>&emsp;&emsp;若加进W作中间顶点，从V0到Vi的距离值缩短，则修改此距离值</p>
+                      </div>
+                      <div><p>重复上述步骤2、3，直到S中包含峙所有顶点，即W=Vi为止</p></div>
                     </div>
                 </div>
                 
