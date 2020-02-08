@@ -38,8 +38,11 @@ $(function () {
     var selectedNode = null;
     // 记录所选线
     var selectedLine = null;
-    // 记录算法进行时所访问的线
+    // 记录算法进行时所访问的线(pri, kru)
     var visitingLine = null;
+    // 记录算法正在访问的结点(dij)
+    var visitingNode = -1;
+    var updateNodes = [];
     // 分割线
     var spliter = Snap("#spliter");
     // 结点个数
@@ -51,6 +54,7 @@ $(function () {
     // 伪代码框
     var pcodes = $('.pcode').children();
     var pstep = 0;
+    
    
     set_btn_listener();
     $('#example_menu').delegate('div', 'click', load_example);
@@ -90,6 +94,8 @@ $(function () {
         g.attr('data-num', textNum);
         if (textNum === 0) {
             head = g;
+        } else if (textNum >= MAX_NUM) {
+            return;
         }
         // 距离表里增加一项
         add_node_to_table(textNum); 
@@ -159,6 +165,7 @@ $(function () {
      * - 重新绑定按钮事件
      * - 去除上一步下一步按钮
      * - 重置状态
+     * - 取消高亮
      */
     function reset() {    
         for (let i = 0; i < textNum; i++) {
@@ -183,6 +190,8 @@ $(function () {
         selectedNode = null;
         selectedLine = null;
         textNum = 0;
+        updateNodes = [];
+        pcode_highligt_at(-1);
     }
 
     /**
@@ -212,12 +221,12 @@ $(function () {
   
         nodes.forEach(item => {
             item.click(circle_click);
-            item[0].removeClass('visited').removeClass('visiting');
+            item[0].removeClass('visited').removeClass('visiting').removeClass('update');
         })
         get_line_set();
         lineSet.forEach(item => {
             item.click(line_click);
-            item[0].removeClass('connect');
+            item[0].removeClass('connect').removeClass('not-select').removeClass('update');
         })
         add_listener();
         remove_last_and_next_listener();
@@ -226,7 +235,9 @@ $(function () {
         step = 0;
         visitedNodes = new Array(MAX_NUM).fill(false);
         nodeSet = new Array(MAX_NUM).fill(0);
-
+        updateNodes = [];
+        reset_table();
+        pcode_highligt_at(-1);
         // 之后移除这个按钮的事件
         $('#modify_btn').unbind('click');
     }
@@ -508,16 +519,16 @@ $(function () {
         var table = $("#distance-table");
         var html = '<tr><th>' +  num;
         if (num !== 0) {
-            html += '</th><td>Infinite</td></tr>';
+            html += '</th><td>&infin;</td></tr>';
         } else {
-            html += '</th><td>0</td></tr>';
+            html += '<span class=\'header\'>header</span></th><td>0</td></tr>';
         }
         table.html(table.html()+html);
     }
 
     /**
      * 更新距离表
-     * 在设置顶点和开始算法和删除虚线时用到
+     * 在设置顶点和开始算法和删除虚线和修改现图时用到
      * 
      * - 初始化数据距离表和视图距离表
      * - 初始化所有结点为未访问
@@ -526,23 +537,23 @@ $(function () {
      */
     function reset_table() {
         if (textNum === 0) return;
-        let head_num = +head.attr('data-num');
-        var table_tr = $('#distance-table').find('td');
+        var table_tr = $('#distance-table').find('tr');
         if (table_tr.length === 0) return;
+        let head_num = +head.attr('data-num');
         for (let i = 0; i < textNum; i++) {
             // 距离表初始化为0，因此不用管
             if (head_num === i) {
-                table_tr[i].innerHTML = 0;
+                table_tr[i].innerHTML = `<th>${i}<span class='header'>header</span></th><td>0</td>`;
                 continue;
             }
             visitedNodes[i] = false;
-            nodes[i][0].removeClass('visited');
+            nodes[i][0].removeClass('visited').removeClass('visiting');
             if (lines[head_num][i] === null) {
                 distances[i] = Number.MAX_SAFE_INTEGER;
-                table_tr[i].innerHTML = 'Infinite';
+                table_tr[i].innerHTML = `<th>${i}</th><td>&infin;</td>`;
             } else {
                 distances[i] = +lines[head_num][i].attr('data-distance');
-                table_tr[i].innerHTML = distances[i];
+                table_tr[i].innerHTML = `<th>${i}</th><td>${distances[i]}</td>`;
             }   
         }
     }
@@ -590,11 +601,17 @@ $(function () {
         $('#last_dij_btn').unbind('click').click(last_dij_step).removeClass('disabled');
         $('#next_dij_btn').unbind('click').click(next_dij_step).removeClass('disabled');
         $('#modify_btn').unbind('click').click(modify_graph).removeClass('disabled');
-
+        // 上一步时
+        if (updateNodes.length) {
+            updateNodes.forEach(i => {
+                nodes[i][0].removeClass('update');
+                lines[visitingNode][i][0].removeClass('update');
+            })
+        }
         step = 0;
+        updateNodes = [];
         reset_table();
-        
-
+        pcode_highligt_at(1);    
     }
 
     /**
@@ -602,29 +619,61 @@ $(function () {
      * 执行算法的下一步
      */
     function next_dij_step() {
+        // 下一步是更新距离表
+        // 添加标签 “update”
+        // 修改标签 “visiting->visited”
+        if (pstep === 2) {
+            let s = visitingNode;
+            let table_tr = $('#distance-table').find('tr');
+            nodes[s][0].removeClass('visiting').addClass('visited');
+            var head_num = +head.attr('data-num');
+            let m = Number.MAX_SAFE_INTEGER;
+            for (let j = 0; j < textNum; j++) {
+                if (!visitedNodes[j] && lines[s][j] && distances[j] - (+lines[s][j].attr('data-distance')) > distances[s]) {
+                    let dist = distances[s] + (+lines[s][j].attr('data-distance'));
+                    let th = `<th>${j}<span class='update'>update</span></th>`;
+                    let td = `<td>${distances[j]===m?'&infin;':distances[j]}&rarr;${distances[s]}+${(+lines[s][j].attr('data-distance'))}=${dist}</td>`
+                    distances[j] = dist;
+                    table_tr[j].innerHTML = th + td;
+                    lines[s][j][0].addClass('update');
+                    nodes[j][0].addClass('update');
+                    updateNodes.push(j);
+                } else if (visitedNodes[j] && j !== head_num ) {
+                    let str = `<th>${j}<span class='visited'>visited</span></th><td>${distances[j]}</td>`;
+                    table_tr[j].innerHTML = str;
+                }
+            }
+            pcode_highligt_at(3);
+            return;
+        } else if (pstep === 4) {
+            return;
+        }
+        
+        let table_tr = $('#distance-table').find('tr');
+        updateNodes.forEach(item => {
+            table_tr[item].innerHTML = `<th>${item}</th><td>${distances[item]}</td>`;
+            nodes[item][0].removeClass('update');
+            lines[item][visitingNode][0].removeClass('update')
+        })
         let next_node = -1;
         let min = Number.MAX_SAFE_INTEGER;
+        updateNodes = [];
         for (let j = 0; j < textNum; j++) {
-            if (!visitedNodes[j] && distances[j] < min) {
+            if (!visitedNodes[j] && distances[j] <= min) {
                 min = distances[j];
                 next_node = j;
             }
         }
         if (next_node !== -1) {
-            nodes[next_node][0].addClass('visited');
-            let table_tr = $('#distance-table').find('td');
+            pcode_highligt_at(2);
+            visitingNode = next_node;   
+            table_tr[next_node].innerHTML = `<th>${next_node}<span class='visiting'>visiting</span></th><td>${distances[next_node]}</td>`;
+            nodes[next_node][0].addClass('visiting');
             visitedNodes[next_node] = true;
             // 更新
-            for (let j = 0; j < textNum; j++) {
-                if (!visitedNodes[j] && lines[next_node][j] && distances[j] > distances[next_node] + (+lines[next_node][j].attr('data-distance'))) {
-                    distances[j] = distances[next_node] + (+lines[next_node][j].attr('data-distance'));
-                    table_tr[j].innerHTML = distances[j];
-                    //console.log(table_tr[j].parentNode)
-
-                }
-            }
-            
             step++;
+        } else {
+            pcode_highligt_at(4);
         }
     }
 
@@ -635,8 +684,7 @@ $(function () {
     function last_dij_step() {
         let n = --step;
         begin_dij_btn_click();  
-        
-        for (let i = 0; i < n; i++) {
+        while(step < n) {
             next_dij_step();
         }
 
@@ -668,6 +716,13 @@ $(function () {
      */
     function pcode_highligt_at(step) {
         if (step >= pcodes.length) return;
+        if (step === -1) {
+            if (pstep !== -1) {
+                $(pcodes[pstep]).removeClass('select');
+            }
+            pstep = -1;
+            return;
+        }
         if (pstep === -1) {
             pstep = step;
             $(pcodes[pstep]).addClass('select');

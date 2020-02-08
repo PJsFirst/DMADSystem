@@ -15,6 +15,9 @@
 .circle-node.visiting {
     fill: red;
 }
+.circle-node.update {
+    fill: yellow;
+}
 
 .circle-node.visited {
     fill: yellowgreen;
@@ -43,6 +46,7 @@
 .line-font.visiting {
     fill: red;
 }
+
 .line-font.visited {
     fill: lightgray;
 }
@@ -64,6 +68,11 @@
 .line.visiting {
     stroke-width: 5;
     stroke: red;
+}
+
+.line.update {
+    stroke-width: 5;
+    stroke: yellow;
 }
 
 .line.not-select {
@@ -166,6 +175,27 @@ tr.select{
 
 .pcode .select {
     border: solid 0.25rem red;
-   
-    
+}
+
+table {
+    width: 100%;
+}
+td {
+    overflow: hidden;
+}
+#distance-table span {
+    margin-left: 1em;
+    border: solid 1px black;
+}
+#distance-table .header {
+    background-color: orange;
+}
+#distance-table .visited {
+    background-color: yellowgreen;
+}
+#distance-table .visiting {
+    background-color: red;
+}
+#distance-table .update {
+    background-color: yellow;
 }
